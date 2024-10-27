@@ -3,7 +3,8 @@ package com.gleidsonsilva.api_unit_tests.services.impl;
 import com.gleidsonsilva.api_unit_tests.domain.User;
 import com.gleidsonsilva.api_unit_tests.domain.dto.UserDTO;
 import com.gleidsonsilva.api_unit_tests.repositories.UserRepository;
-import com.gleidsonsilva.api_unit_tests.services.UserNotFoundException;
+import com.gleidsonsilva.api_unit_tests.services.exceptions.DataIntegrityViolationException;
+import com.gleidsonsilva.api_unit_tests.services.exceptions.UserNotFoundException;
 import com.gleidsonsilva.api_unit_tests.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserDTO dto) {
+        findByEmail(dto);
         return repository.save(mapper.map(dto, User.class));
+    }
+
+    private void findByEmail(UserDTO dto) {
+        Optional<User> user = repository.findByEmail(dto.getEmail());
+        if (user.isPresent()) {
+            throw new DataIntegrityViolationException("E-mail já cadastrado no sistema");
+        }
     }
 }
