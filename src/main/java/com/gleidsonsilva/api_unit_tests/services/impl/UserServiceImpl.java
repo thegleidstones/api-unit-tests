@@ -1,9 +1,11 @@
 package com.gleidsonsilva.api_unit_tests.services.impl;
 
 import com.gleidsonsilva.api_unit_tests.domain.User;
+import com.gleidsonsilva.api_unit_tests.domain.dto.UserDTO;
 import com.gleidsonsilva.api_unit_tests.repositories.UserRepository;
 import com.gleidsonsilva.api_unit_tests.services.UserNotFoundException;
 import com.gleidsonsilva.api_unit_tests.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private ModelMapper mapper;
+
     @Override
     public User findById(Integer id) {
         Optional<User> obj = repository.findById(id);
@@ -24,5 +29,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public User create(UserDTO dto) {
+        return repository.save(mapper.map(dto, User.class));
     }
 }
