@@ -1,6 +1,5 @@
 package com.gleidsonsilva.api_unit_tests.resources;
 
-import com.gleidsonsilva.api_unit_tests.domain.User;
 import com.gleidsonsilva.api_unit_tests.domain.dto.UserDTO;
 import com.gleidsonsilva.api_unit_tests.services.UserService;
 import org.modelmapper.ModelMapper;
