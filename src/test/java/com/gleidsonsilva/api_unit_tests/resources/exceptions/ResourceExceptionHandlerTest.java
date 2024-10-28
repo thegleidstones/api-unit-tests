@@ -71,4 +71,18 @@ class ResourceExceptionHandlerTest {
         assertEquals("Url inválida informada", response.getBody().getError());
         assertEquals(404, response.getBody().getStatus());
     }
+
+    @Test
+    void whenMethodArgumentTypeMismatchExceptionThenReturnAResponseEntity() {
+        ResponseEntity<StandardError> response = exceptionHandler
+                .handleMethodArgumentTypeMismatchException(
+                        new MockHttpServletRequest());
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(StandardError.class, response.getBody().getClass());
+        assertEquals("Tipo de dados inválido enviado no parâmetro da url", response.getBody().getError());
+        assertEquals(400, response.getBody().getStatus());
+    }
 }
