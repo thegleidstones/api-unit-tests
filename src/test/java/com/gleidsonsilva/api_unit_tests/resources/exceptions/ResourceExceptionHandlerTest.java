@@ -1,5 +1,6 @@
 package com.gleidsonsilva.api_unit_tests.resources.exceptions;
 
+import com.gleidsonsilva.api_unit_tests.services.exceptions.DataIntegrityViolationException;
 import com.gleidsonsilva.api_unit_tests.services.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ResourceExceptionHandlerTest {
 
     public static final String USUARIO_NAO_ENCONTRADO = "Usuário não encontrado";
+    public static final String E_MAIL_JA_CADASTRADO = "E-mail já cadastrado";
     @InjectMocks
     private ResourceExceptionHandler exceptionHandler;
 
@@ -40,6 +42,19 @@ class ResourceExceptionHandlerTest {
     }
 
     @Test
-    void dataIntegratyViolation() {
+    void whenDataIntegrityViolationThenReturnAResponseEntity() {
+        ResponseEntity<StandardError> response = exceptionHandler
+                .dataIntegrityViolation(
+                        new DataIntegrityViolationException(E_MAIL_JA_CADASTRADO),
+                        new MockHttpServletRequest());
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(StandardError.class, response.getBody().getClass());
+        assertEquals(E_MAIL_JA_CADASTRADO, response.getBody().getError());
+        assertEquals(400, response.getBody().getStatus());
+
     }
 }
