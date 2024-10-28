@@ -41,4 +41,11 @@ public class ResourceExceptionHandler {
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<StandardError> handleNoResourceFoundException(HttpServletRequest request) {
+        StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(),
+                "Url inválida informada", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 }
