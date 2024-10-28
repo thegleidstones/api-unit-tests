@@ -3,6 +3,7 @@ package com.gleidsonsilva.api_unit_tests.resources.exceptions;
 import com.gleidsonsilva.api_unit_tests.services.exceptions.DataIntegrityViolationException;
 import com.gleidsonsilva.api_unit_tests.services.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
@@ -55,6 +56,19 @@ class ResourceExceptionHandlerTest {
         assertEquals(StandardError.class, response.getBody().getClass());
         assertEquals(E_MAIL_JA_CADASTRADO, response.getBody().getError());
         assertEquals(400, response.getBody().getStatus());
+    }
 
+    @Test
+    void whenHandleNoResourceFoundExceptionThenReturnAResponseEntity() {
+        ResponseEntity<StandardError> response = exceptionHandler
+                .handleNoResourceFoundException(
+                        new MockHttpServletRequest());
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(StandardError.class, response.getBody().getClass());
+        assertEquals("Url inválida informada", response.getBody().getError());
+        assertEquals(404, response.getBody().getStatus());
     }
 }
