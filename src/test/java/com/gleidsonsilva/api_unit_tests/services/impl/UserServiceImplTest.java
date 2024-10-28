@@ -27,8 +27,8 @@ class UserServiceImplTest {
     public static final String NAME = "Gleidson Silva";
     public static final String EMAIL = "gleidson@gmail.com";
     public static final String PASSWORD = "123";
-    public static final String USUARIO_NAO_ENCONTRADO = "Usuário não encontrado";
     public static final Integer INDEX = 0;
+    public static final String USUARIO_NAO_ENCONTRADO = "Usuário não encontrado";
     public static final String E_MAIL_JA_CADASTRADO = "E-mail já cadastrado no sistema";
     @InjectMocks
     private UserServiceImpl service;
