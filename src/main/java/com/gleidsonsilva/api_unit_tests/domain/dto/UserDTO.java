@@ -16,15 +16,15 @@ import lombok.Setter;
 public class UserDTO {
         private Integer id;
 
-        @NotBlank(message = "Nome não pode ser nulo ou vazio")
+        @NotBlank(message = "Invalid name, null or empty values found.")
         private String name;
 
-        @NotBlank(message = "E-mail não pode ser nulo ou vazio")
-        @Email(message = "E-mail deve ser válido")
+        @NotBlank(message = "Invalid e-mail, null or empty values found.")
+        @Email(message = "E-mail must be a valid format")
         private String email;
 
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-        @NotBlank(message = "Senha não pode ser nula ou vazia")
-        @Size(min = 6, max = 20, message = "Senha deve ter no mínimo 6 caracteres e máximo 20")
+        @NotBlank(message = "Invalid password, null or empty values found.")
+        @Size(min = 6, max = 20, message = "Password must be min 6 chars and max 20 chars.")
         private String password;
 }
