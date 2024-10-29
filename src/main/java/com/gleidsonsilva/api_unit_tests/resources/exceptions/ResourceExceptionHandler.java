@@ -5,6 +5,7 @@ import com.gleidsonsilva.api_unit_tests.services.exceptions.UserNotFoundExceptio
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,8 +13,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @ControllerAdvice
 public class ResourceExceptionHandler {
@@ -34,13 +34,23 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException exception) {
-        Map<String, String> errors = new HashMap<>();
+    public ResponseEntity<ValidationStandardError> handleValidationExceptions(MethodArgumentNotValidException exception,
+                                                                    HttpServletRequest request) {
+        List<String> list = new ArrayList<>();
 
-        exception.getBindingResult().getFieldErrors().forEach(error
-                -> errors.put(error.getField(), error.getDefaultMessage()));
+        for (FieldError error : exception.getBindingResult().getFieldErrors()) {
+            StringBuilder errorsString = new StringBuilder();
+            list.add(errorsString.append(error.getField()).append(": ").append(error.getDefaultMessage()).toString());
+        }
 
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        ValidationStandardError error = new ValidationStandardError (
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                list,
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
