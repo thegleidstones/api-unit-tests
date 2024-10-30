@@ -2,6 +2,7 @@ package com.gleidsonsilva.api_unit_tests.resources;
 
 import com.gleidsonsilva.api_unit_tests.domain.dto.UserDTO;
 import com.gleidsonsilva.api_unit_tests.services.UserService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,14 +37,14 @@ public class UserResource {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> create(@RequestBody UserDTO dto) {
+    public ResponseEntity<UserDTO> create(@Valid @RequestBody UserDTO dto) {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(ID).buildAndExpand(service.create(dto).getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping(value = ID)
-    public ResponseEntity<UserDTO> update(@PathVariable Integer id, @RequestBody UserDTO dto) {
+    public ResponseEntity<UserDTO> update(@PathVariable Integer id, @Valid @RequestBody UserDTO dto) {
         dto.setId(id);
         return ResponseEntity.ok().body(mapper.map(service.update(dto), UserDTO.class));
     }
